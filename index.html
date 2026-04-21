@@ -1,0 +1,1241 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Shrivatsa S Kulkarni — Portfolio</title>
+  <link
+    href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,700;1,400&family=DM+Mono:wght@300;400;500&display=swap"
+    rel="stylesheet" />
+  <style>
+    :root {
+      --bg: #0b0b0f;
+      --surface: #13131a;
+      --border: #1e1e2e;
+      --accent: #e8c97e;
+      --accent2: #7ec8e8;
+      --text: #e8e8f0;
+      --muted: #6b6b80;
+      --glow: rgba(232, 201, 126, 0.15);
+    }
+
+    *,
+    *::before,
+    *::after {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    html {
+      scroll-behavior: smooth;
+    }
+
+    body {
+      background: var(--bg);
+      color: var(--text);
+      font-family: 'DM Mono', monospace;
+      overflow-x: hidden;
+      cursor: none;
+    }
+
+    #cursor {
+      position: fixed;
+      width: 12px;
+      height: 12px;
+      background: var(--accent);
+      border-radius: 50%;
+      pointer-events: none;
+      z-index: 9999;
+      transform: translate(-50%, -50%);
+      transition: width .2s, height .2s, background .2s;
+    }
+
+    #cursor-ring {
+      position: fixed;
+      width: 36px;
+      height: 36px;
+      border: 1px solid var(--accent);
+      border-radius: 50%;
+      pointer-events: none;
+      z-index: 9998;
+      transform: translate(-50%, -50%);
+      transition: all .12s ease;
+      opacity: 0.5;
+    }
+
+    body::before {
+      content: '';
+      position: fixed;
+      inset: 0;
+      background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)' opacity='0.04'/%3E%3C/svg%3E");
+      pointer-events: none;
+      z-index: 1000;
+      opacity: 0.4;
+    }
+
+    nav {
+      position: fixed;
+      top: 0;
+      left: 0;
+      right: 0;
+      padding: 24px 48px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      z-index: 100;
+      border-bottom: 1px solid transparent;
+      transition: border-color .3s, background .3s;
+    }
+
+    nav.scrolled {
+      background: rgba(11, 11, 15, 0.88);
+      backdrop-filter: blur(12px);
+      border-color: var(--border);
+    }
+
+    .nav-logo {
+      font-family: 'Playfair Display', serif;
+      font-size: 1.4rem;
+      color: var(--accent);
+    }
+
+    .nav-links {
+      display: flex;
+      gap: 28px;
+      list-style: none;
+    }
+
+    .nav-links a {
+      color: var(--muted);
+      text-decoration: none;
+      font-size: 0.72rem;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+      transition: color .2s;
+      position: relative;
+    }
+
+    .nav-links a::after {
+      content: '';
+      position: absolute;
+      bottom: -4px;
+      left: 0;
+      right: 0;
+      height: 1px;
+      background: var(--accent);
+      transform: scaleX(0);
+      transition: transform .25s;
+    }
+
+    .nav-links a:hover {
+      color: var(--accent);
+    }
+
+    .nav-links a:hover::after {
+      transform: scaleX(1);
+    }
+
+    #hero {
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      padding: 120px 48px 80px;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .hero-grid-lines {
+      position: absolute;
+      inset: 0;
+      pointer-events: none;
+      background-image: linear-gradient(var(--border) 1px, transparent 1px), linear-gradient(90deg, var(--border) 1px, transparent 1px);
+      background-size: 60px 60px;
+      opacity: 0.4;
+      mask-image: radial-gradient(ellipse 80% 80% at 50% 50%, black 30%, transparent 100%);
+    }
+
+    .hero-eyebrow {
+      font-size: 0.7rem;
+      letter-spacing: 0.25em;
+      text-transform: uppercase;
+      color: var(--accent);
+      margin-bottom: 24px;
+      opacity: 0;
+      animation: fadeUp .6s .2s forwards;
+    }
+
+    .hero-title {
+      font-family: 'Playfair Display', serif;
+      font-size: clamp(3rem, 8vw, 6.5rem);
+      line-height: 1.05;
+      font-weight: 700;
+      max-width: 950px;
+      opacity: 0;
+      animation: fadeUp .7s .4s forwards;
+    }
+
+    .hero-title em {
+      font-style: italic;
+      color: var(--accent);
+    }
+
+    .hero-sub {
+      margin-top: 28px;
+      font-size: 0.85rem;
+      color: var(--muted);
+      max-width: 520px;
+      line-height: 1.8;
+      opacity: 0;
+      animation: fadeUp .7s .6s forwards;
+    }
+
+    .hero-meta {
+      margin-top: 20px;
+      display: flex;
+      gap: 24px;
+      flex-wrap: wrap;
+      opacity: 0;
+      animation: fadeUp .7s .7s forwards;
+    }
+
+    .hero-meta-item {
+      font-size: 0.68rem;
+      letter-spacing: 0.12em;
+      color: var(--muted);
+    }
+
+    .hero-meta-item span {
+      color: var(--accent2);
+    }
+
+    .hero-cta {
+      margin-top: 48px;
+      display: flex;
+      gap: 16px;
+      opacity: 0;
+      animation: fadeUp .7s .85s forwards;
+    }
+
+    .btn {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      padding: 14px 28px;
+      font-family: 'DM Mono', monospace;
+      font-size: 0.75rem;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+      text-decoration: none;
+      transition: all .25s;
+      cursor: none;
+    }
+
+    .btn-primary {
+      background: var(--accent);
+      color: #0b0b0f;
+    }
+
+    .btn-primary:hover {
+      background: #f0d890;
+      transform: translateY(-2px);
+      box-shadow: 0 8px 24px var(--glow);
+    }
+
+    .btn-outline {
+      border: 1px solid var(--border);
+      color: var(--text);
+    }
+
+    .btn-outline:hover {
+      border-color: var(--accent);
+      color: var(--accent);
+      transform: translateY(-2px);
+    }
+
+    .hero-scroll-hint {
+      position: absolute;
+      bottom: 40px;
+      left: 48px;
+      font-size: 0.65rem;
+      letter-spacing: 0.2em;
+      text-transform: uppercase;
+      color: var(--muted);
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      opacity: 0;
+      animation: fadeUp .6s 1.2s forwards;
+    }
+
+    .scroll-line {
+      width: 40px;
+      height: 1px;
+      background: var(--muted);
+      position: relative;
+      overflow: hidden;
+    }
+
+    .scroll-line::after {
+      content: '';
+      position: absolute;
+      inset: 0;
+      background: var(--accent);
+      animation: slideLine 1.6s ease-in-out infinite;
+    }
+
+    @keyframes slideLine {
+      0% {
+        transform: translateX(-100%)
+      }
+
+      100% {
+        transform: translateX(100%)
+      }
+    }
+
+    section {
+      padding: 100px 48px;
+    }
+
+    .section-label {
+      font-size: 0.65rem;
+      letter-spacing: 0.3em;
+      text-transform: uppercase;
+      color: var(--accent);
+      margin-bottom: 48px;
+      display: flex;
+      align-items: center;
+      gap: 16px;
+    }
+
+    .section-label::after {
+      content: '';
+      flex: 1;
+      max-width: 60px;
+      height: 1px;
+      background: var(--accent);
+      opacity: 0.5;
+    }
+
+    .about-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 80px;
+      align-items: start;
+      max-width: 1100px;
+    }
+
+    .about-heading {
+      font-family: 'Playfair Display', serif;
+      font-size: clamp(2rem, 4vw, 3rem);
+      line-height: 1.2;
+    }
+
+    .about-heading strong {
+      color: var(--accent);
+    }
+
+    .cgpa-badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 10px;
+      margin-top: 24px;
+      padding: 12px 20px;
+      border: 1px solid var(--border);
+      background: var(--surface);
+      font-size: 0.72rem;
+      letter-spacing: 0.1em;
+    }
+
+    .cgpa-num {
+      font-family: 'Playfair Display', serif;
+      font-size: 1.4rem;
+      color: var(--accent);
+    }
+
+    .skills-section {
+      margin-top: 40px;
+    }
+
+    .skills-category {
+      margin-bottom: 18px;
+    }
+
+    .skills-cat-label {
+      font-size: 0.6rem;
+      letter-spacing: 0.2em;
+      text-transform: uppercase;
+      color: var(--muted);
+      margin-bottom: 10px;
+    }
+
+    .skills-list {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+    }
+
+    .skill-tag {
+      padding: 6px 14px;
+      border: 1px solid var(--border);
+      font-size: 0.7rem;
+      letter-spacing: 0.08em;
+      color: var(--muted);
+      transition: all .2s;
+    }
+
+    .skill-tag:hover {
+      border-color: var(--accent);
+      color: var(--accent);
+      background: var(--glow);
+    }
+
+    .about-text {
+      color: var(--muted);
+      line-height: 1.9;
+      font-size: 0.82rem;
+    }
+
+    .about-text p+p {
+      margin-top: 16px;
+    }
+
+    .about-text strong {
+      color: var(--text);
+    }
+
+    #projects {
+      background: var(--surface);
+    }
+
+    .projects-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: flex-end;
+      margin-bottom: 60px;
+      max-width: 1100px;
+    }
+
+    .projects-title {
+      font-family: 'Playfair Display', serif;
+      font-size: clamp(2rem, 4vw, 3rem);
+    }
+
+    .projects-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 24px;
+      max-width: 1100px;
+    }
+
+    .project-card {
+      background: var(--bg);
+      border: 1px solid var(--border);
+      padding: 32px;
+      position: relative;
+      overflow: hidden;
+      transition: border-color .3s, transform .3s;
+      cursor: none;
+    }
+
+    .project-card::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
+      height: 2px;
+      background: linear-gradient(90deg, var(--accent), var(--accent2));
+      transform: scaleX(0);
+      transform-origin: left;
+      transition: transform .35s;
+    }
+
+    .project-card:hover {
+      border-color: var(--accent);
+      transform: translateY(-6px);
+    }
+
+    .project-card:hover::before {
+      transform: scaleX(1);
+    }
+
+    .project-num {
+      font-size: 0.65rem;
+      color: var(--accent);
+      letter-spacing: 0.2em;
+      margin-bottom: 20px;
+    }
+
+    .project-name {
+      font-family: 'Playfair Display', serif;
+      font-size: 1.2rem;
+      margin-bottom: 12px;
+    }
+
+    .project-desc {
+      font-size: 0.75rem;
+      color: var(--muted);
+      line-height: 1.8;
+      margin-bottom: 20px;
+    }
+
+    .project-tags {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 6px;
+      margin-bottom: 16px;
+    }
+
+    .project-tag {
+      font-size: 0.62rem;
+      letter-spacing: 0.1em;
+      padding: 4px 10px;
+      background: var(--border);
+      color: var(--muted);
+    }
+
+    .project-type {
+      font-size: 0.62rem;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+      color: var(--accent2);
+    }
+
+    .timeline {
+      margin-top: 8px;
+    }
+
+    .timeline-item {
+      display: grid;
+      grid-template-columns: 160px 1px 1fr;
+      gap: 0 32px;
+      padding-bottom: 48px;
+    }
+
+    .timeline-item:last-child {
+      padding-bottom: 0;
+    }
+
+    .timeline-date {
+      font-size: 0.68rem;
+      color: var(--muted);
+      padding-top: 4px;
+      text-align: right;
+      line-height: 1.6;
+    }
+
+    .timeline-line {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+    }
+
+    .timeline-dot {
+      width: 10px;
+      height: 10px;
+      border-radius: 50%;
+      background: var(--accent);
+      border: 2px solid var(--bg);
+      flex-shrink: 0;
+      margin-top: 4px;
+    }
+
+    .timeline-connector {
+      flex: 1;
+      width: 1px;
+      background: var(--border);
+      margin-top: 8px;
+    }
+
+    .timeline-item:last-child .timeline-connector {
+      display: none;
+    }
+
+    .timeline-role {
+      font-family: 'Playfair Display', serif;
+      font-size: 1.15rem;
+      margin-bottom: 4px;
+    }
+
+    .timeline-company {
+      font-size: 0.7rem;
+      letter-spacing: 0.12em;
+      color: var(--accent);
+      text-transform: uppercase;
+      margin-bottom: 4px;
+    }
+
+    .timeline-mode {
+      font-size: 0.62rem;
+      color: var(--muted);
+      letter-spacing: 0.1em;
+      margin-bottom: 12px;
+    }
+
+    .timeline-desc {
+      font-size: 0.75rem;
+      color: var(--muted);
+      line-height: 1.8;
+    }
+
+    .timeline-desc li {
+      margin-left: 16px;
+      margin-bottom: 4px;
+    }
+
+    #recognition {
+      background: var(--surface);
+    }
+
+    .recog-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 20px;
+      max-width: 1100px;
+    }
+
+    .recog-card {
+      border: 1px solid var(--border);
+      padding: 28px;
+      transition: border-color .3s, transform .3s;
+    }
+
+    .recog-card:hover {
+      border-color: var(--accent2);
+      transform: translateY(-4px);
+    }
+
+    .recog-icon {
+      font-size: 1.4rem;
+      margin-bottom: 14px;
+    }
+
+    .recog-title {
+      font-family: 'Playfair Display', serif;
+      font-size: 1.05rem;
+      margin-bottom: 6px;
+    }
+
+    .recog-org {
+      font-size: 0.62rem;
+      letter-spacing: 0.15em;
+      color: var(--accent);
+      text-transform: uppercase;
+      margin-bottom: 10px;
+    }
+
+    .recog-desc {
+      font-size: 0.73rem;
+      color: var(--muted);
+      line-height: 1.75;
+    }
+
+    .certs-grid {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 16px;
+      max-width: 1100px;
+    }
+
+    .cert-card {
+      border: 1px solid var(--border);
+      padding: 20px;
+      transition: border-color .3s;
+    }
+
+    .cert-card:hover {
+      border-color: var(--accent);
+    }
+
+    .cert-issuer {
+      font-size: 0.6rem;
+      letter-spacing: 0.15em;
+      text-transform: uppercase;
+      color: var(--accent2);
+      margin-bottom: 8px;
+    }
+
+    .cert-name {
+      font-size: 0.78rem;
+      color: var(--text);
+      line-height: 1.5;
+    }
+
+    .cert-date {
+      font-size: 0.62rem;
+      color: var(--muted);
+      margin-top: 8px;
+    }
+
+    .lang-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 14px;
+      max-width: 700px;
+      margin-top: 32px;
+    }
+
+    .lang-item {
+      padding: 14px 18px;
+      border: 1px solid var(--border);
+      transition: border-color .2s;
+    }
+
+    .lang-item:hover {
+      border-color: var(--accent);
+    }
+
+    .lang-name {
+      font-size: 0.8rem;
+      color: var(--text);
+      margin-bottom: 4px;
+    }
+
+    .lang-level {
+      font-size: 0.6rem;
+      letter-spacing: 0.1em;
+      color: var(--muted);
+    }
+
+    #contact {
+      text-align: center;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .contact-glow {
+      position: absolute;
+      width: 600px;
+      height: 600px;
+      border-radius: 50%;
+      background: radial-gradient(circle, rgba(232, 201, 126, 0.07) 0%, transparent 70%);
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      pointer-events: none;
+    }
+
+    .contact-title {
+      font-family: 'Playfair Display', serif;
+      font-size: clamp(2.5rem, 6vw, 5rem);
+      max-width: 700px;
+      margin: 0 auto 24px;
+      line-height: 1.15;
+    }
+
+    .contact-title em {
+      font-style: italic;
+      color: var(--accent);
+    }
+
+    .contact-sub {
+      color: var(--muted);
+      font-size: 0.8rem;
+      margin-bottom: 48px;
+      line-height: 1.8;
+    }
+
+    .contact-email {
+      display: inline-block;
+      font-family: 'Playfair Display', serif;
+      font-size: clamp(1rem, 2.5vw, 1.5rem);
+      color: var(--text);
+      text-decoration: none;
+      border-bottom: 1px solid var(--accent);
+      padding-bottom: 4px;
+      transition: color .2s;
+    }
+
+    .contact-email:hover {
+      color: var(--accent);
+    }
+
+    .contact-phone {
+      font-size: 0.8rem;
+      color: var(--muted);
+      margin-top: 14px;
+    }
+
+    .social-links {
+      margin-top: 48px;
+      display: flex;
+      justify-content: center;
+      gap: 24px;
+    }
+
+    .social-link {
+      font-size: 0.65rem;
+      letter-spacing: 0.2em;
+      text-transform: uppercase;
+      color: var(--muted);
+      text-decoration: none;
+      transition: color .2s;
+    }
+
+    .social-link:hover {
+      color: var(--accent);
+    }
+
+    footer {
+      padding: 32px 48px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      border-top: 1px solid var(--border);
+      font-size: 0.65rem;
+      color: var(--muted);
+      letter-spacing: 0.1em;
+    }
+
+    @keyframes fadeUp {
+      from {
+        opacity: 0;
+        transform: translateY(28px)
+      }
+
+      to {
+        opacity: 1;
+        transform: translateY(0)
+      }
+    }
+
+    .reveal {
+      opacity: 0;
+      transform: translateY(32px);
+      transition: opacity .7s ease, transform .7s ease;
+    }
+
+    .reveal.visible {
+      opacity: 1;
+      transform: none;
+    }
+
+    @media (max-width:900px) {
+      nav {
+        padding: 20px 24px;
+      }
+
+      .nav-links {
+        gap: 14px;
+      }
+
+      section {
+        padding: 70px 24px;
+      }
+
+      #hero {
+        padding: 120px 24px 80px;
+      }
+
+      .about-grid,
+      .projects-grid,
+      .recog-grid,
+      .certs-grid {
+        grid-template-columns: 1fr;
+      }
+
+      .lang-grid {
+        grid-template-columns: repeat(2, 1fr);
+      }
+
+      .projects-header {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 12px;
+      }
+
+      .timeline-item {
+        grid-template-columns: 1fr;
+      }
+
+      .timeline-date {
+        text-align: left;
+        padding-bottom: 8px;
+      }
+
+      .timeline-line {
+        display: none;
+      }
+
+      footer {
+        flex-direction: column;
+        gap: 12px;
+        text-align: center;
+      }
+    }
+  </style>
+</head>
+
+<body>
+
+  <div id="cursor"></div>
+  <div id="cursor-ring"></div>
+
+  <nav id="nav">
+    <div class="nav-logo">SSK.</div>
+    <ul class="nav-links">
+      <li><a href="#about">About</a></li>
+      <li><a href="#projects">Projects</a></li>
+      <li><a href="#experience">Experience</a></li>
+      <li><a href="#recognition">Awards</a></li>
+      <li><a href="#contact">Contact</a></li>
+    </ul>
+  </nav>
+
+  <section id="hero">
+    <div class="hero-grid-lines"></div>
+    <p class="hero-eyebrow">✦ Open to opportunities · B.Tech CSE · Graduating 2027</p>
+    <h1 class="hero-title">Shrivatsa<br><em>Kulkarni</em></h1>
+    <p class="hero-sub">CSE student at SRM University — building AI systems, IoT devices, and mobile apps. From disaster
+      rescue drones to biometric medicine dispensers.</p>
+    <div class="hero-meta">
+      <div class="hero-meta-item">📍 <span>Nandivaram-Guduvancheri, Tamil Nadu</span></div>
+      <div class="hero-meta-item">🎓 <span>CGPA 8.03 · Minor in Data Science</span></div>
+      <div class="hero-meta-item">🏆 <span>ACM-W Makeathon Winner</span></div>
+    </div>
+    <div class="hero-cta">
+      <a href="#projects" class="btn btn-primary">View My Work →</a>
+      <a href="#contact" class="btn btn-outline">Get In Touch</a>
+    </div>
+    <div class="hero-scroll-hint"><span class="scroll-line"></span>Scroll to explore</div>
+  </section>
+
+  <!-- ABOUT -->
+  <section id="about">
+    <p class="section-label reveal">About me</p>
+    <div class="about-grid">
+      <div class="reveal">
+        <h2 class="about-heading">From circuits<br>to <strong>cloud.</strong></h2>
+        <div class="cgpa-badge">
+          <span class="cgpa-num">8.03</span>
+          <span style="font-size:0.7rem;color:var(--muted)">CGPA · SRM University<br>B.Tech CSE + Minor in Data
+            Science</span>
+        </div>
+        <div class="skills-section">
+          <div class="skills-category">
+            <p class="skills-cat-label">Programming</p>
+            <div class="skills-list">
+              <span class="skill-tag">Python</span><span class="skill-tag">Java</span><span
+                class="skill-tag">C++</span><span class="skill-tag">C</span><span class="skill-tag">Dart</span><span
+                class="skill-tag">HTML/CSS</span>
+            </div>
+          </div>
+          <div class="skills-category">
+            <p class="skills-cat-label">Frameworks & Tools</p>
+            <div class="skills-list">
+              <span class="skill-tag">Flutter</span><span class="skill-tag">PyTorch</span><span
+                class="skill-tag">MySQL</span><span class="skill-tag">Supabase</span><span class="skill-tag">Git</span>
+            </div>
+          </div>
+          <div class="skills-category">
+            <p class="skills-cat-label">Hardware</p>
+            <div class="skills-list">
+              <span class="skill-tag">Arduino</span><span class="skill-tag">Raspberry Pi</span><span
+                class="skill-tag">ESP32</span>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="about-text reveal" style="transition-delay:.15s">
+        <p>Hi — I'm <strong>Shrivatsa Shrinivas Kulkarni</strong>, a Computer Science student at SRM University
+          (Chennai) with a minor in Data Science, graduating in 2027.</p>
+        <p>I'm a builder at heart. Whether it's a biometric medicine dispenser for elderly users, an AI dental
+          diagnostics model, or a rescue drone with LiDAR and thermal imaging — I gravitate towards projects where code
+          creates real-world impact.</p>
+        <p>I've interned at IIT Palakkad under the Agni Fellowship, worked as an AI Intern at Motiveminds, and conducted
+          IoT research at SRM NWC. I've competed in 10+ hackathons including Microsoft's Solution Challenge (top 40 of
+          5000+) and won the SRM ACM-W Makeathon.</p>
+        <p>Multilingual in English, Hindi, Kannada, Tamil, Sanskrit, and German — I thrive in diverse, collaborative
+          teams.</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- PROJECTS -->
+  <section id="projects">
+    <div class="projects-header reveal">
+      <h2 class="projects-title">Selected<br><em
+          style="font-family:'Playfair Display',serif;font-style:italic;color:var(--accent)">Projects</em></h2>
+      <p class="section-label" style="margin:0">6 Projects</p>
+    </div>
+    <div class="projects-grid">
+      <div class="project-card reveal">
+        <p class="project-num">01 ——</p>
+        <h3 class="project-name">Dental Caries Detection</h3>
+        <p class="project-desc">End-to-end AI diagnostic system for automated dental caries detection using pixel-level
+          segmentation and severity classification.</p>
+        <div class="project-tags"><span class="project-tag">PyTorch</span><span class="project-tag">Python</span><span
+            class="project-tag">segmentation-models</span></div>
+        <p class="project-type">Minor Project · Jan 2026 – Present</p>
+      </div>
+      <div class="project-card reveal" style="transition-delay:.08s">
+        <p class="project-num">02 ——</p>
+        <h3 class="project-name">AromaCare — Air Monitor</h3>
+        <p class="project-desc">IoT air quality monitoring system with ESP32, MQ-series sensors, and a real-time web
+          dashboard for environmental health tracking.</p>
+        <div class="project-tags"><span class="project-tag">Flutter</span><span class="project-tag">C++</span><span
+            class="project-tag">Arduino</span><span class="project-tag">Supabase</span></div>
+        <p class="project-type">IoT & App Dev · Jan 2026 – Present</p>
+      </div>
+      <div class="project-card reveal" style="transition-delay:.16s">
+        <p class="project-num">03 ——</p>
+        <h3 class="project-name">Medicine Dispensing System</h3>
+        <p class="project-desc">Biometric-authenticated multi-chamber dispenser for elderly & visually impaired users
+          with overdose/underdose fail-safe logic.</p>
+        <div class="project-tags"><span class="project-tag">Python</span><span class="project-tag">Raspberry
+            Pi</span><span class="project-tag">Flutter</span><span class="project-tag">Supabase</span></div>
+        <p class="project-type">IIT Palakkad Agni Fellowship</p>
+      </div>
+      <div class="project-card reveal" style="transition-delay:.24s">
+        <p class="project-num">04 ——</p>
+        <h3 class="project-name">IoT Rescue Drone</h3>
+        <p class="project-desc">Drone using LiDAR, radar, and thermal imaging for detecting humans in collapsed
+          structures with GPS nav and sensor fusion.</p>
+        <div class="project-tags"><span class="project-tag">IoT</span><span class="project-tag">LiDAR</span><span
+            class="project-tag">GPS</span><span class="project-tag">Sensor Fusion</span></div>
+        <p class="project-type">SRM NWC Research Intern</p>
+      </div>
+      <div class="project-card reveal" style="transition-delay:.32s">
+        <p class="project-num">05 ——</p>
+        <h3 class="project-name">Voice-Controlled Car</h3>
+        <p class="project-desc">Autonomous voice-controlled car responding to spoken commands with ultrasonic obstacle
+          detection and collision prevention.</p>
+        <div class="project-tags"><span class="project-tag">C++</span><span class="project-tag">Arduino</span></div>
+        <p class="project-type">Prototype Competition · Sept–Nov 2023</p>
+      </div>
+      <div class="project-card reveal" style="transition-delay:.4s">
+        <p class="project-num">06 ——</p>
+        <h3 class="project-name">Secure Notes App</h3>
+        <p class="project-desc">Privacy-first notes app with local storage (no cloud), intuitive UI for storing
+          passwords and personal notes with zero data leakage.</p>
+        <div class="project-tags"><span class="project-tag">Flutter</span><span class="project-tag">Dart</span><span
+            class="project-tag">Android Studio</span></div>
+        <p class="project-type">Personal Project</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- EXPERIENCE -->
+  <section id="experience" style="max-width:1100px;margin:0 auto;">
+    <p class="section-label reveal">Experience</p>
+    <div class="timeline">
+      <div class="timeline-item reveal">
+        <div class="timeline-date">Nov 2025<br>Apr 2026</div>
+        <div class="timeline-line">
+          <div class="timeline-dot"></div>
+          <div class="timeline-connector"></div>
+        </div>
+        <div>
+          <h3 class="timeline-role">Product Developer & Project Lead</h3>
+          <p class="timeline-company">IIT Palakkad — Agni Fellowship</p>
+          <p class="timeline-mode">Part-time · Online</p>
+          <ul class="timeline-desc">
+            <li>Designed biometric-authenticated multi-chamber medicine dispensing system for elderly & visually
+              impaired users.</li>
+            <li>Implemented fingerprint access control, ultrasonic sensing, load-cell verification, and servo dispensing
+              on Raspberry Pi.</li>
+            <li>Built Flutter mobile app with Supabase backend for real-time monitoring, scheduling, and event logging.
+            </li>
+            <li>Developed fail-safe overdose/underdose detection and medicine threshold monitoring logic.</li>
+          </ul>
+        </div>
+      </div>
+      <div class="timeline-item reveal" style="transition-delay:.1s">
+        <div class="timeline-date">Jul 2025<br>Feb 2026</div>
+        <div class="timeline-line">
+          <div class="timeline-dot"></div>
+          <div class="timeline-connector"></div>
+        </div>
+        <div>
+          <h3 class="timeline-role">AI Intern</h3>
+          <p class="timeline-company">Motiveminds</p>
+          <p class="timeline-mode">Internship · Hybrid</p>
+          <ul class="timeline-desc">
+            <li>Worked on AI/ML-based solutions and data-driven applications for real-world business use cases.</li>
+            <li>Assisted in developing and optimizing frontend interfaces for improved user experience.</li>
+            <li>Gained exposure to enterprise systems and SAP-based workflows for business process automation.</li>
+            <li>Implemented data processing techniques to support AI model development.</li>
+          </ul>
+        </div>
+      </div>
+      <div class="timeline-item reveal" style="transition-delay:.2s">
+        <div class="timeline-date">Jun 2025<br>Jul 2025</div>
+        <div class="timeline-line">
+          <div class="timeline-dot"></div>
+          <div class="timeline-connector"></div>
+        </div>
+        <div>
+          <h3 class="timeline-role">Research Intern</h3>
+          <p class="timeline-company">SRM NWC</p>
+          <p class="timeline-mode">Internship</p>
+          <ul class="timeline-desc">
+            <li>Designed IoT-enabled rescue drone using LiDAR, radar, and thermal imaging to detect humans in collapsed
+              structures.</li>
+            <li>Integrated GPS navigation, sensor fusion, and remote telemetry for real-time disaster response.</li>
+          </ul>
+        </div>
+      </div>
+      <div class="timeline-item reveal" style="transition-delay:.3s">
+        <div class="timeline-date">2022<br>2027</div>
+        <div class="timeline-line">
+          <div class="timeline-dot"></div>
+          <div class="timeline-connector"></div>
+        </div>
+        <div>
+          <h3 class="timeline-role">B.Tech — Computer Science & Engineering</h3>
+          <p class="timeline-company">SRM University, Chennai</p>
+          <p class="timeline-mode">Minor in Data Science · CGPA 8.03/10</p>
+          <p class="timeline-desc" style="list-style:none">Studying data structures, algorithms, OS, DBMS, machine
+            learning, and IoT systems. Also served as event organizer for C.Tech Association's innovation-themed
+            hackathon (Sept 2025).</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- AWARDS & RECOGNITION -->
+  <section id="recognition">
+    <p class="section-label reveal">Awards & Competitions</p>
+    <div class="recog-grid">
+      <div class="recog-card reveal">
+        <div class="recog-icon">🏆</div>
+        <h3 class="recog-title">ACM-W Makeathon Winner</h3>
+        <p class="recog-org">SRM University · Mar 2026</p>
+        <p class="recog-desc">Multi-modal rescue intelligence platform combining RF/microwave through-rubble detection,
+          TDOA cell tower triangulation, and drone thermal scanning fused into a real-time Google Earth command
+          dashboard.</p>
+      </div>
+      <div class="recog-card reveal" style="transition-delay:.08s">
+        <div class="recog-icon">🚀</div>
+        <h3 class="recog-title">Microsoft Hackathon Finalist</h3>
+        <p class="recog-org">Microsoft Solution Challenge · Apr 2024</p>
+        <p class="recog-desc">Among top 40 teams out of 5,000+ participants in the Microsoft Solution Challenge.</p>
+      </div>
+      <div class="recog-card reveal" style="transition-delay:.16s">
+        <div class="recog-icon">🥈</div>
+        <h3 class="recog-title">Top 10 — 24hr Hackathon</h3>
+        <p class="recog-org">Acharya College · May 2025</p>
+        <p class="recog-desc">Led a team of 4 to secure top 10 among 150+ participating teams, optimizing workflow for
+          maximum efficiency.</p>
+      </div>
+      <div class="recog-card reveal" style="transition-delay:.24s">
+        <div class="recog-icon">💡</div>
+        <h3 class="recog-title">Innovative Idea Award</h3>
+        <p class="recog-org">Hindustan University Ideathon · Mar 2026</p>
+        <p class="recog-desc">Disaster rescue system using WiFi/microwave signals, drone thermal cameras, and cell tower
+          data displayed on a live map.</p>
+      </div>
+      <div class="recog-card reveal" style="transition-delay:.32s">
+        <div class="recog-icon">🎖️</div>
+        <h3 class="recog-title">Outstanding Student Award</h3>
+        <p class="recog-org">SRM University · Aug 2024</p>
+        <p class="recog-desc">Recognized for balancing academics with co-curricular and extra-curricular activities.</p>
+      </div>
+      <div class="recog-card reveal" style="transition-delay:.4s">
+        <div class="recog-icon">⚙️</div>
+        <h3 class="recog-title">Anveshana Prototype Finalist</h3>
+        <p class="recog-org">Prototype Competition · Mar 2025</p>
+        <p class="recog-desc">Finalist as team leader, fostering effective collaboration and communication under
+          competition pressure.</p>
+      </div>
+    </div>
+
+    <p class="section-label reveal" style="margin-top:72px">Certifications</p>
+    <div class="certs-grid">
+      <div class="cert-card reveal">
+        <p class="cert-issuer">NPTEL · IIT Kharagpur</p>
+        <p class="cert-name">Programming in Java</p>
+        <p class="cert-date">NPTEL24CS105</p>
+      </div>
+      <div class="cert-card reveal" style="transition-delay:.08s">
+        <p class="cert-issuer">NPTEL · IIT Kharagpur</p>
+        <p class="cert-name">Machine Learning</p>
+        <p class="cert-date">Oct 2025</p>
+      </div>
+      <div class="cert-card reveal" style="transition-delay:.16s">
+        <p class="cert-issuer">Scaler</p>
+        <p class="cert-name">DBMS Course</p>
+        <p class="cert-date">May 2025</p>
+      </div>
+      <div class="cert-card reveal" style="transition-delay:.24s">
+        <p class="cert-issuer">Alteryx</p>
+        <p class="cert-name">Designer Core — Data Transformation</p>
+        <p class="cert-date">Jan 2025 – Jan 2027</p>
+      </div>
+    </div>
+
+    <p class="section-label reveal" style="margin-top:72px">Languages</p>
+    <div class="lang-grid">
+      <div class="lang-item reveal">
+        <p class="lang-name">English</p>
+        <p class="lang-level">Professional Working</p>
+      </div>
+      <div class="lang-item reveal" style="transition-delay:.05s">
+        <p class="lang-name">Hindi</p>
+        <p class="lang-level">Professional Working</p>
+      </div>
+      <div class="lang-item reveal" style="transition-delay:.1s">
+        <p class="lang-name">Kannada</p>
+        <p class="lang-level">Native</p>
+      </div>
+      <div class="lang-item reveal" style="transition-delay:.15s">
+        <p class="lang-name">Tamil</p>
+        <p class="lang-level">Fundamental</p>
+      </div>
+      <div class="lang-item reveal" style="transition-delay:.2s">
+        <p class="lang-name">Sanskrit</p>
+        <p class="lang-level">Fundamental</p>
+      </div>
+      <div class="lang-item reveal" style="transition-delay:.25s">
+        <p class="lang-name">German</p>
+        <p class="lang-level">Fundamental</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- CONTACT -->
+  <section id="contact">
+    <div class="contact-glow"></div>
+    <p class="section-label reveal" style="justify-content:center">Let's connect</p>
+    <h2 class="contact-title reveal">Have an idea<br>worth <em>building?</em></h2>
+    <p class="contact-sub reveal">Open to research collaborations, internships, and full-time roles.<br>Drop me a line —
+      let's build something impactful together.</p>
+    <a href="mailto:sk4849@srmist.edu.in" class="contact-email reveal">kulkarnishrivatsa05@gmail.com</a>
+    <p class="contact-phone reveal">+91 94831 49948</p>
+    <div class="social-links reveal">
+      <a href="https://www.linkedin.com/in/shrivatsa-s-kulkarni/" class="social-link">LinkedIn</a>
+      <a href="https://github.com/ShrivatsaSK" class="social-link">GitHub</a>
+      <a href="https://www.hackerrank.com/profile/kulkarnishrivat1" class="social-link">HackerRank</a>
+    </div>
+  </section>
+
+  <footer>
+    <span>© 2026 Shrivatsa Shrinivas Kulkarni</span>
+    <span>SRM University · CSE · Graduating 2027</span>
+  </footer>
+
+  <script>
+    const cursor = document.getElementById('cursor');
+    const ring = document.getElementById('cursor-ring');
+    let mx = 0, my = 0, rx = 0, ry = 0;
+    document.addEventListener('mousemove', e => { mx = e.clientX; my = e.clientY; cursor.style.left = mx + 'px'; cursor.style.top = my + 'px'; });
+    (function animRing() { rx += (mx - rx) * .12; ry += (my - ry) * .12; ring.style.left = rx + 'px'; ring.style.top = ry + 'px'; requestAnimationFrame(animRing); })();
+    document.querySelectorAll('a,button,.project-card,.recog-card,.cert-card,.lang-item,.skill-tag').forEach(el => {
+      el.addEventListener('mouseenter', () => { cursor.style.width = '20px'; cursor.style.height = '20px'; cursor.style.background = 'transparent'; ring.style.width = '50px'; ring.style.height = '50px'; });
+      el.addEventListener('mouseleave', () => { cursor.style.width = '12px'; cursor.style.height = '12px'; cursor.style.background = 'var(--accent)'; ring.style.width = '36px'; ring.style.height = '36px'; });
+    });
+    const nav = document.getElementById('nav');
+    window.addEventListener('scroll', () => nav.classList.toggle('scrolled', window.scrollY > 60));
+    const obs = new IntersectionObserver(entries => { entries.forEach(e => { if (e.isIntersecting) { e.target.classList.add('visible'); obs.unobserve(e.target); } }); }, { threshold: 0.1 });
+    document.querySelectorAll('.reveal').forEach(el => obs.observe(el));
+    document.querySelectorAll('a[href^="#"]').forEach(a => {
+      a.addEventListener('click', e => { const t = document.querySelector(a.getAttribute('href')); if (t) { e.preventDefault(); t.scrollIntoView({ behavior: 'smooth' }); } });
+    });
+  </script>
+</body>
+
+</html>
